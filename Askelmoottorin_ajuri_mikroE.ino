@@ -23,8 +23,8 @@ void setup() {
   pinMode(DIR, OUTPUT);
 
 //HALF STEP VAUHTI
-  digitalWrite(MS1, LOW);
-  digitalWrite(MS2, LOW);
+//  digitalWrite(MS1, HIGH);
+//  digitalWrite(MS2, LOW);
 //Lähdöt aktiiviset  
   digitalWrite(ENAB, LOW);
 //Alas odottamaan ekaa käskyä  
@@ -41,7 +41,43 @@ void setup() {
 int tUp=1000;
 int tDn=1000;
 
-void step(){
+void fullStep(){
+
+  digitalWrite(MS1, LOW);
+  digitalWrite(MS2, LOW);
+  digitalWrite(STEP, HIGH);
+  delayMicroseconds(tUp);
+  digitalWrite(STEP, LOW);
+  delayMicroseconds(tDn);
+  
+}
+
+void halfStep(){
+
+  digitalWrite(MS1, HIGH);
+  digitalWrite(MS2, LOW);
+  digitalWrite(STEP, HIGH);
+  delayMicroseconds(tUp);
+  digitalWrite(STEP, LOW);
+  delayMicroseconds(tDn);
+  
+}
+
+void quarterStep(){
+
+  digitalWrite(MS1, LOW);
+  digitalWrite(MS2, HIGH);
+  digitalWrite(STEP, HIGH);
+  delayMicroseconds(tUp);
+  digitalWrite(STEP, LOW);
+  delayMicroseconds(tDn);
+  
+}
+
+void eightMicroStep(){
+
+  digitalWrite(MS1, HIGH);
+  digitalWrite(MS2, HIGH);
   digitalWrite(STEP, HIGH);
   delayMicroseconds(tUp);
   digitalWrite(STEP, LOW);
@@ -62,12 +98,11 @@ void loop() {
       case 'l':Serial.print(tUp);Serial.print(" ");Serial.println(tDn);break;
     }
   }
-  step();
+  quarterStep();
  
   
   
 
   
 }
-
 
