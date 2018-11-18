@@ -5,11 +5,19 @@ const int STEP = 9;
 const int SLEEP = 8;
 const int RESET = 7;
 const int DIR = 5;
-const int MP = HIGH; //Myötäp.
-const int VP = LOW;  //Vastap.
+const int MP = HIGH; 
+const int VP = LOW;  
+const int NAPPI = 2;
+const int PAINETTU = LOW;
+const int TOIMINTA = 0;
+const int SEIS = 1;
+
 
 int suunta;
 int viive = 980;
+int vanhaTila;
+int tila = SEIS;
+int suodatus = 15;
 
 unsigned long previousMillis = 0;        
 const long interval = 150;
@@ -23,19 +31,28 @@ void setup() {
   pinMode(SLEEP, OUTPUT);
   pinMode(RESET, OUTPUT);
   pinMode(DIR, OUTPUT);
+  pinMode(NAPPI, INPUT_PULLUP);
 
   digitalWrite(ENAB, LOW);
   digitalWrite(SLEEP,HIGH);
-  digitalWrite(RESET, HIGH);  
+  digitalWrite(RESET, HIGH); 
+  vanhaTila = digitalRead(NAPPI); 
 
   Serial.begin(9600);
 
 }
 
 void loop() {
+  nappi();
+  if (tila == TOIMINTA) {
   suunnanvaihto();
+  } else {
+    suunta=SEIS;
+  }
+    digitalWrite(DIR, suunta);
+  }
 
-}
+
 
 void suunnanvaihto() {
   
@@ -64,3 +81,20 @@ void suunnanvaihto() {
   }
 }
 
+void nappi() {
+
+  int uusiTila = digitalRead(NAPPI);
+  
+  if (uusiTila != vanhaTila) {
+    if (uusiTila == PAINETTU) {
+      if (tila == SEIS) {
+        tila = TOIMINTA;
+      } else {
+        tila = SEIS;
+        Serial.print("SEIS");
+      }
+    } 
+    delay(suodatus);
+  } 
+  vanhaTila=uusiTila;
+}
